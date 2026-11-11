@@ -1,1 +1,241 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Simple EHR on Azure</title>
+
+ <style>
+  *{
+     box-sizing: border-box;
+  }
+
+  body {
+     margin: 0;
+     padding: 24px;
+     font-family: Arial, sans-serif;
+     background: #eef4f8;
+     color: #203447;
+  }
+
+  main {
+    max-width: 900px;
+    margin: auto;
+    padding: 28px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px #00000012;
+  }
+
+  h1 {
+    margin-top: 0;
+    color: #146b83;
+  }
+
+  .description {
+    line-height: 1.6;
+    color: #526575;
+  }
+
+  label {
+    display: block;
+    margin-top: 16px;
+    font-weight: bold;
+  }
+
+  input, textarea {
+    width: 100%;
+    margin-top: 7px;
+    padding: 11px;
+    border: 1px solid #aab8c2;
+    border-radius: 6px;
+    font: inherit;
+  }
+
+  input:focus, textarea:focus {
+    outline: 2px solid #146b83;
+    outline-offset: 2px;
+  }
+
+  button {
+   margin-top: 18px;
+   padding: 12px 20px;
+   border: none;
+   border-radius: 6px;
+   background: #146b83;
+   color: white;
+   font: inherit;
+   cursor: pointer;
+  }
+
+  button:hover {
+    background: #0e5063;
+  }
+
+  #message {
+    min-height: 24px;
+    color: #146b83;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    margin-top: 16px;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 12px;
+    border: 1px solid #ccd7df;
+    text-align: left;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  th {
+    background: #e7f2f6;
+  }
+
+  footer {
+    margin-top: 24px;
+    font-size: 14px;
+    color: #526575;
+  }
+
+  @media (max-width: 600px) {
+   body {
+      padding: 12px;
+   }
+
+   main {
+     padding: 18px;
+   }
+
+   h1 {
+      font-size: 26px;
+   }
+  }
+ </style>
+</head>
+
+<body>
+ <main>
+  <h1>Electronic Health Record</h1>
+
+  <p class="description">
+   A simple EHR demonstration hosted on Microsoft Azure.
+   Use fictional patient information only.
+  </p>
+
+  <h2>Patient Entry Form</h2>
+
+  <form id="patientForm">
+   <label for="patientId">Patient ID</label>
+   <input
+    id="patientId"
+    placeholder="Example: P001"
+    maxlength="30"
+    required
+   >
+
+   <label for="patientName">Patient Name</label>
+   <input
+    id="patientName"
+    placeholder="Example: Demo Patient"
+    maxlength="100"
+    required
+   >
+
+   <label for="age">Age in years</label>
+   <input
+    id="age"
+    type="number"
+    min="0"
+    max="120"
+    step="1"
+    required
+   >
+
+   <label for="notes">Clinical Notes</label>
+   <textarea
+    id="notes"
+    rows="3"
+    placeholder="Enter sample clinical notes"
+    maxlength="500"
+    required
+   ></textarea>
+
+   <button type="submit">Add Patient Record</button>
+  </form>
+
+  <p id="message" role="status"></p>
+
+  <h2>Patient Records</h2>
+
+  <p>
+   These records are temporary and disappear when
+   the page is refreshed.
+  </p>
+
+  <div class="table-container">
+   <table>
+    <thead>
+     <tr>
+      <th>Patient ID</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Clinical Notes</th>
+     </tr>
+    </thead>
+
+    <tbody id="records"></tbody>
+   </table>
+  </div>
+
+  <footer>
+   Educational EHR demonstration | Microsoft Azure
+  </footer>
+ </main>
+
+ <script>
+  const form = document.getElementById("patientForm");
+  const records = document.getElementById("records");
+  const message = document.getElementById("message");
+
+  form.addEventListener("submit", function (event) {
+   event.preventDefault();
+
+   const values = [
+     document.getElementById("patientId").value.trim(),
+     document.getElementById("patientName").value.trim(),
+     document.getElementById("age").value,
+     document.getElementById("notes").value.trim()
+   ];
+
+   if (values.some(value => value === "")) {
+     message.textContent = "Please complete every field.";
+     return;
+   }
+
+   const row = document.createElement("tr");
+
+   values.forEach(function (value) {
+    const cell = document.createElement("td");
+    cell.textContent = value;
+    row.appendChild(cell);
+   });
+
+   records.appendChild(row);
+
+   message.textContent = "Patient record added successfully.";
+   form.reset();
+   document.getElementById("patientId").focus();
+  });
+ </script>
+</body>
+</html>
+
